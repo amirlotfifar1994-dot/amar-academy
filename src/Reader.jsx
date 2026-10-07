@@ -1,0 +1,10 @@
+import React from 'react';
+import {Check,Download,ClipboardList,ChartColumn} from 'lucide-react';
+import {Blocks} from './Content.jsx';
+import {number,download} from './format.js';
+export default function Reader({lesson,progress,setProgress,navigate}){
+ const done=progress.lessons.includes(lesson.id);
+ const headings=lesson.blocks.map((b,i)=>({...b,index:i})).filter(b=>b.type==='heading');
+ function toggle(){setProgress(p=>({...p,lessons:done?p.lessons.filter(n=>n!==lesson.id):[...p.lessons,lesson.id]}));}
+ return <><div className="page-heading"><button className="text-button" onClick={()=>navigate('home')}>مسیر یادگیری</button><h1>جلسهٔ {number(lesson.id)} · {lesson.title}</h1><p>{lesson.description}</p></div><div className="reader-actions"><button className="button" onClick={()=>navigate('practice',lesson.id)}><ClipboardList size={18}/>تمرین‌های این جلسه</button><button className="button secondary" onClick={()=>navigate('lab')}><ChartColumn size={18}/>تجربه در آزمایشگاه</button><a className="button secondary" href={download(lesson.files[0])} download><Download size={18}/>جزوهٔ Word</a><button className={'button '+(done?'':'secondary')} onClick={toggle} aria-pressed={done}>{done?<Check size={18}/>:null}{done?'خوانده‌ام':'ثبت به‌عنوان خوانده‌شده'}</button></div><div className="reader-layout"><aside className="toc"><h2>در این جلسه</h2><nav aria-label="فهرست بخش‌های جلسه">{headings.map(h=><a key={h.index} className={h.level===2?'sub':''} href={'#section-'+h.index}>{h.text}</a>)}</nav></aside><Blocks blocks={lesson.blocks}/></div><div className="lesson-end"><h2>آموخته‌هایت را به کار بگیر</h2><p>پاسخ خودت را بنویس و بعد با پاسخ معیار مقایسه کن.</p><div className="reader-actions"><button className="button" onClick={()=>navigate('practice',lesson.id)}>حل {number(lesson.exercises.filter(q=>q.main).length)} تمرین اصلی</button>{lesson.id<10?<button className="button secondary" onClick={()=>navigate('lesson',lesson.id+1)}>جلسهٔ بعد</button>:<button className="button secondary" onClick={()=>navigate('lab')}>تحلیل داده در آزمایشگاه</button>}</div></div></>;
+}
