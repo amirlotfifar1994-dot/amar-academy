@@ -1,0 +1,89 @@
+{
+  "engine": "Microsoft Excel",
+  "version": "16.0",
+  "build": 20326.0,
+  "date": "2026-10-07T19:11:52.9422851+03:30",
+  "results": [
+    {
+      "metric": "n",
+      "formula": "=COUNT(B2:B9)",
+      "value": 8.0,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "metric": "mean",
+      "formula": "=AVERAGE(B2:B9)",
+      "value": 7.0,
+      "expected": 7,
+      "passed": true
+    },
+    {
+      "metric": "median",
+      "formula": "=MEDIAN(B2:B9)",
+      "value": 7.0,
+      "expected": 7,
+      "passed": true
+    },
+    {
+      "metric": "variance",
+      "formula": "=VAR.S(B2:B9)",
+      "value": 1.7142857142857142,
+      "expected": 1.7142857142857142,
+      "passed": true
+    },
+    {
+      "metric": "sd",
+      "formula": "=STDEV.S(B2:B9)",
+      "value": 1.3093073414159542,
+      "expected": 1.3093073414159542,
+      "passed": true
+    },
+    {
+      "metric": "q1",
+      "formula": "=PERCENTILE.INC(B2:B9,0.25)",
+      "value": 6.0,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "metric": "q3",
+      "formula": "=PERCENTILE.INC(B2:B9,0.75)",
+      "value": 8.0,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "metric": "z",
+      "formula": "=(B9-AVERAGE($B$2:$B$9))/STDEV.S($B$2:$B$9)",
+      "value": 1.5275252316519468,
+      "expected": 1.5275252316519468,
+      "passed": true
+    },
+    {
+      "metric": "percentile_rank",
+      "formula": "=100*(COUNTIF(B2:B9,\"<7\")+0.5*COUNTIF(B2:B9,7))/COUNT(B2:B9)",
+      "value": 50.0,
+      "expected": 50,
+      "passed": true
+    },
+    {
+      "metric": "covariance",
+      "formula": "=COVARIANCE.S(B2:B9,C2:C9)",
+      "value": -3.142857142857143,
+      "expected": -3.142857142857143,
+      "passed": true
+    },
+    {
+      "metric": "r",
+      "formula": "=CORREL(B2:B9,C2:C9)",
+      "value": -0.9799578870122229,
+      "expected": -0.9799578870122228,
+      "passed": true
+    }
+  ],
+  "input_change_mean": 7.125,
+  "blank_count": 7.0,
+  "zero_count": 8.0,
+  "spss_executed": false
+}
