@@ -1,14 +1,19 @@
 import React from 'react';
-import {ChartColumn,ClipboardList,Check,Table2,ChartLine,ChartPie,ChartScatter,Equal,Target,Presentation} from 'lucide-react';
-import {number,fmt} from './format.js';
-import {BASE_X,describe,histogram} from './stats.js';
-const sample=[4,...[1,2,4,6,9,12,10,7,4,2,1].flatMap((count,i)=>Array(count).fill(4+(i+.5)*8/11)),12];
-const bins=histogram(sample,11),stats=describe(sample);
-const lessonIcons=[ChartColumn,Table2,ChartLine,ChartPie,ChartColumn,Equal,ChartLine,Target,ChartScatter,Presentation];
-export default function Home({course,progress,navigate}){
- const next=course.lessons.find(l=>!progress.lessons.includes(l.id))||course.lessons[0];
- return <><div className="page-heading"><h1>آمار را با تجربه یاد بگیر</h1><p>از داده‌های خام تا تحلیل و گزارش، قدم‌به‌قدم.</p></div>
- <div className="welcome-grid"><section className="journey-panel"><h2>مسیر یادگیری شما</h2><h3>جلسهٔ {number(next.id)} · {next.title}</h3><p>{next.description}. با مثال‌های روان‌شناختی پیش برو و آموخته‌هایت را در تمرین‌ها به کار بگیر.</p><button className="button amber" onClick={()=>navigate('lesson',next.id)}>{progress.lessons.length?'ادامهٔ یادگیری':'شروع یادگیری'}</button></section>
- <button className="chart-preview" onClick={()=>navigate('lab')} aria-label="باز کردن آزمایشگاه تعاملی آمار"><div className="chart-preview-heading"><h2>داده‌ها را لمس کن</h2><p>آزمایشگاه تعاملی آمار</p></div><svg viewBox="0 0 600 230" role="img" aria-label="هیستوگرام نمونهٔ آموزشی ساعات خواب"><line x1="44" y1="184" x2="580" y2="184" stroke="#86919e"/><line x1="44" y1="20" x2="44" y2="184" stroke="#86919e"/>{[0,4,8,12].map(n=><g key={n}><text x="28" y={184-n*12+5} textAnchor="middle">{number(n)}</text></g>)}{bins.map((b,i)=><rect key={i} x={46+i*48} y={184-b.count*12} width="47" height={b.count*12} fill="#28726a"/>)}<line x1={44+(stats.mean-4)/8*528} x2={44+(stats.mean-4)/8*528} y1="18" y2="184" stroke="#e9a83b" strokeWidth="3" strokeDasharray="6 5"/><text x="308" y="16" textAnchor="middle" fill="#bd7c0b">میانگین = {fmt(stats.mean)}</text>{[4,6,8,10,12].map((n,i)=><text key={n} x={46+i*132} y="208" textAnchor="middle">{number(n)}</text>)}<text x="305" y="230" textAnchor="middle">ساعت خواب · دادهٔ ساختگی آموزشی</text></svg></button></div>
- <section className="lesson-list-section"><div className="section-heading"><h2>ده قدم تا تحلیل داده</h2><span>{number(progress.lessons.length)} از ۱۰ جلسه خوانده شده</span></div><div className="lesson-list">{course.lessons.map(l=>{const Icon=lessonIcons[l.id-1];return <article className="lesson-row" key={l.id}><span className={'lesson-number '+(progress.lessons.includes(l.id)?'complete':'')}>{progress.lessons.includes(l.id)?<Check size={20}/>:number(l.id)}</span><h3><Icon size={22}/>{l.title}</h3><p>{l.description}</p><span className="exercise-count"><ClipboardList size={19}/>{number(l.exercises.length)} تمرین</span><button className="button compact" onClick={()=>navigate('lesson',l.id)}>مطالعه</button></article>;})}</div></section></>;
+import {ArrowLeft,Check,ChevronDown,ChevronLeft,FileText,FlaskConical,Lightbulb,ChartColumn} from 'lucide-react';
+import {number} from './format.js';
+import {CenterExperiment} from './Experiments.jsx';
+import {guides,phases} from './learning.js';
+
+export default function Home({course,progress,navigate}) {
+  const next=course.lessons.find(l=>!progress.lessons.includes(l.id))||course.lessons[0];
+  return <>
+    <div className="home-opening">
+      <section className="home-intro"><h1>اول بفهم،<br/>بعد محاسبه کن.</h1><p>آمار توصیفی را با مثال‌های روان‌شناسی، آزمایش و تمرین یاد بگیر.</p><button className="button amber" onClick={()=>navigate('lesson',next.id)}>{progress.lessons.length?'ادامهٔ یادگیری':'شروع یادگیری'}<ArrowLeft size={22}/></button><button className="text-button explore-link" onClick={()=>navigate('lab')}>کاوش در آزمایشگاه<ArrowLeft size={21}/></button><button className="next-lesson" onClick={()=>navigate('lesson',next.id)}><FileText size={21}/><span>جلسهٔ {number(next.id)} · {next.title}</span></button></section>
+      <CenterExperiment compact/>
+    </div>
+    <section className="syllabus"><div className="syllabus-heading"><div><h2>مسیر یادگیری</h2><p>از فهم مفاهیم تا تحلیل و گزارش</p></div><div className="learning-rhythm">{[[Lightbulb,'بفهم','مفهوم را با مثال ببین'],[FlaskConical,'تجربه کن','با تغییر داده، اثرش را ببین'],[ChartColumn,'به کار ببر','حل تمرین و گزارش نتیجه']].map(([Icon,title,subtitle])=><div key={title}><span><Icon size={23}/></span><div><strong>{title}</strong><small>{subtitle}</small></div></div>)}</div></div>
+      <div className="course-phases">{phases.map(phase=><details key={phase.title} open={phase.ids.includes(next.id)}><summary><strong>{phase.title}</strong><span>{phase.range}</span><ChevronDown size={17}/></summary><div>{phase.ids.map(id=>{const l=course.lessons.find(item=>item.id===id),done=progress.lessons.includes(id);return <button className="syllabus-row" key={id} onClick={()=>navigate('lesson',id)}><span className={'lesson-number '+(done?'complete':'')}>{done?<Check size={18}/>:number(id)}</span><strong>{l.title}</strong><span className="syllabus-question">{guides[id].question}</span><span className="syllabus-action"><ChevronLeft size={19}/></span></button>;})}</div></details>)}</div>
+    </section>
+    <div className="home-bottom"><p>۱۰ درس مفهومی، ۴۸۰ تمرین تشریحی و ۳۲ سند آموزشی؛ با متن کامل و فایل‌های اصلی.</p><button className="text-button" onClick={()=>navigate('library')}>رفتن به کتابخانه<ArrowLeft size={18}/></button></div>
+  </>;
 }
