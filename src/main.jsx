@@ -4,4 +4,5 @@ import App from './App.jsx';
 import './styles.css';
 import './editorial.css';
 import './groupComparison.css';
+import './weightedMean.css';
 createRoot(document.getElementById('root')).render(<App/>);
