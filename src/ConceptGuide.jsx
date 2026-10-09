@@ -4,6 +4,7 @@ import ConceptExperiment from './Experiments.jsx';
 import {guideSource} from './learning.js';
 import {number} from './format.js';
 import {conceptQuestionId} from './conceptProgress.js';
+import PlainLesson from './PlainLesson.jsx';
 
 function KnowledgeCheck({question,index,lessonId,concepts,onAnswer}) {
   const saved=concepts[conceptQuestionId(lessonId,index)];
@@ -29,7 +30,9 @@ export default function ConceptGuide({guide,navigate,lessonId,concepts,onAnswer}
   const source=guideSource(guide);
   const answers=guide.checks.map((q,i)=>concepts[conceptQuestionId(lessonId,i)]),answered=answers.filter(Boolean).length,correct=answers.filter((a,i)=>a?.choice===guide.checks[i].correct).length;
   return <div className="concept-guide">
+    <nav className="lesson-roadmap" aria-label="مسیر مطالعهٔ راهنما">{[['basics','ساده بفهم'],['experiment','تجربه کن'],['example','حل را دنبال کن'],['check','خودت را بسنج']].map(([id,label],i)=><a key={id} href={'#guide-'+id}><span>{number(i+1)}</span>{label}</a>)}</nav>
     <section className="concept-intro" id="guide-idea"><h2>{guide.headline}</h2><p>{guide.idea}</p><dl className="concept-terms">{guide.terms.map(([term,meaning,example])=><div key={term}><dt>{term}</dt><dd>{meaning}<small>{example}</small></dd></div>)}</dl></section>
+    <PlainLesson lessonId={lessonId}/>
     <div id="guide-experiment"><ConceptExperiment kind={guide.experiment}/></div>
     <section className="worked-example" id="guide-example"><h2>مثال حل‌شده</h2><p>{guide.example}</p><ol className="worked-steps">{guide.steps.map(([title,text])=><li key={title}><h3>{title}</h3><p>{text}</p></li>)}</ol><div className="concept-warning"><TriangleAlert size={21}/><div><strong>اشتباه رایج</strong><p>{guide.pitfall}</p></div></div></section>
     <PrecisionExplanation detail={guide.detail}/>
