@@ -3,19 +3,25 @@ import {ArrowLeft,Compass,BookOpen,FlaskConical} from 'lucide-react';
 import {scales,goals,shapes,initialAnalysisChoice,normalizeAnalysisChoice,recommendAnalysis} from './analysisGuide.js';
 import {describe,histogram,pairStats} from './stats.js';
 import {fmt,number} from './format.js';
+import {summarizeGroups,groupPresets} from './groupComparison.js';
 
 const examples=[
   ['روش مطالعه',{scale:'nominal',goal:'distribution'}],
   ['رضایت از یک سؤال',{scale:'ordinal',goal:'center'}],
   ['زمان انتظار نامتقارن',{scale:'quantitative',goal:'center',shape:'skewed'}],
   ['خواب و استرس',{scale:'quantitative',goal:'relationship',secondScale:'quantitative'}],
+  ['گروه و پاسخ مثبت/منفی',{scale:'nominal',goal:'relationship',secondScale:'nominal'}],
 ];
 export function GuideExample({result}){
   const kind=result.visual,balanced=result.choice.shape==='balanced'||kind==='position';
   const values=balanced?[2,3,3,4,4,5,5,6]:[2,3,3,4,4,5,6,18],stats=describe(values);
   const sx=v=>40+(v-stats.min)/(stats.max-stats.min)*360;
   let drawing,description;
-  if(kind==='bars'){
+  if(result.mode==='groups'){
+    const summary=summarizeGroups(groupPresets.unequal.cells),labels=['الف','ب'];
+    drawing=<><text x="28" y="25">درصد</text>{[0,50,100].map(n=><text key={n} x="36" y={150-n} textAnchor="end">{number(n)}</text>)}{summary.rates.map((rate,i)=><g key={i}><rect x={110+i*160} y={145-rate} width="70" height={rate} rx="3"/><text x={145+i*160} y={135-rate} textAnchor="middle">{fmt(rate)}٪</text><text x={145+i*160} y="174" textAnchor="middle">گروه {labels[i]}</text></g>)}</>;
+    description='سهم پاسخ مثبت درون هر گروه: الف ۸ از ۱۰ نفر، برابر ۸۰٪؛ ب ۱۲ از ۳۰ نفر، برابر ۴۰٪. میله‌ها مقیاس مشترک صفر تا ۱۰۰٪ دارند؛ تعداد بیشتر گروه ب به معنی درصد بیشتر نیست.';
+  }else if(kind==='bars'){
     const labels=result.choice.scale==='ordinal'?['کم','متوسط','زیاد']:['فردی','گروهی','آنلاین'],counts=[2,5,3];
     drawing=<>{counts.map((n,i)=><g key={i}><rect x={65+i*120} y={145-n*20} width="55" height={n*20} rx="3"/><text x={92+i*120} y={135-n*20} textAnchor="middle">{number(n)}</text><text x={92+i*120} y="174" textAnchor="middle">{labels[i]}</text></g>)}<text x="24" y="30">تعداد</text></>;
     description=`نمونهٔ فراوانی یک متغیر: ${labels.map((label,i)=>`${label} ${number(counts[i])} نفر`).join('؛ ')}. درصدها از ۱۰ پاسخ معتبر حساب می‌شوند.`;

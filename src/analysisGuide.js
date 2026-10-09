@@ -17,6 +17,7 @@ export const shapes=[
 ];
 const sources={
   measurement:['مقیاس اندازه‌گیری · OpenStax','https://openstax.org/books/introductory-statistics-2e/pages/1-3-frequency-frequency-tables-and-levels-of-measurement'],
+  groups:['جدول دوطرفه · OpenStax','https://openstax.org/books/introductory-statistics-2e/pages/3-4-contingency-tables'],
   center:['شاخص‌های مرکز · NIST','https://www.itl.nist.gov/div898/handbook/eda/section3/eda351.htm'],
   spread:['شاخص‌های پراکندگی · NIST','https://www.itl.nist.gov/div898/handbook/eda/section3/eda356.htm'],
   histogram:['هیستوگرام · NIST','https://www.itl.nist.gov/div898/handbook/eda/section3/eda33e.htm'],
@@ -38,7 +39,8 @@ export function recommendAnalysis(input){
   if(goal==='relationship'){
     if(scale==='quantitative'&&secondScale==='quantitative')return result('paired','اول پراکنش؛ سپس همبستگی پیرسون برای رابطهٔ خطی','هر نقطه باید دو مقدارِ متعلق به یک مشاهده را نشان دهد. شکل رابطه و مقدارهای دورافتاده را پیش از خلاصه‌کردن با r بررسی کن.','جفت‌ها را جداگانه مرتب نکن. r نزدیک صفر، رابطهٔ خمیده را رد نمی‌کند؛ همبستگی هم به‌تنهایی علیت را نشان نمی‌دهد.',9,'scatter','relationship');
     if(scale!=='nominal'&&secondScale!=='nominal')return result('ranked-pair','برای دادهٔ ترتیبی، رابطهٔ رتبه‌ها را بررسی کن','روش‌هایی مانند اسپیرمن یا کندال برای رابطهٔ رتبه‌ها به کار می‌روند؛ عددهای کدگذاری‌شده الزاماً فاصلهٔ برابر ندارند.','محاسبهٔ همبستگی رتبه‌ای در این آزمایشگاه وجود ندارد. برای یادگیری تفاوت مقیاس‌ها از درس اول شروع کن.',1,null,'rank','bars');
-    return result('categorical-pair','ابتدا فراوانیِ جفت دسته‌ها یا توزیع در هر گروه','اگر هر دو متغیر دسته‌ای‌اند، فراوانی ترکیب دسته‌ها را ببین. اگر یکی کمی است، توزیع آن را در هر دسته جداگانه بررسی کن.','این مسیر به محاسبهٔ پیرسون روی کد دسته‌ها منتهی نمی‌شود. ابزار گروه‌بندی و جدول دوطرفه در آزمایشگاه فعلی وجود ندارد.',1,null,'measurement','bars');
+    if(scale!=='quantitative'&&secondScale!=='quantitative')return result('categorical-pair','جدول دوطرفه؛ با درصدهای درون هر گروه','فراوانی ترکیب دسته‌ها را ببین. برای مقایسهٔ سهم یک پاسخ در گروه‌های نابرابر، تعداد آن پاسخ را بر اندازهٔ همان گروه تقسیم کن.','ابزار فعلی دو گروه و دو نوع پاسخ دارد؛ برای دسته‌های بیشتر، جدول بزرگ‌تری لازم است. تفاوت درصدها به‌تنهایی علیت یا نتیجهٔ کل جامعه را اثبات نمی‌کند.',2,'groups','groups','bars');
+    return result('mixed-pair','توزیع متغیر کمی را در هر گروه جداگانه ببین','برای یک متغیر دسته‌ای و یک متغیر کمی، اندازهٔ گروه‌ها، مرکز، پراکندگی و شکل توزیع کمی را در هر گروه بررسی کن.','کد دسته‌ها را وارد محاسبهٔ پیرسون نکن. ابزار جدول دوطرفه برای تعداد پاسخ‌های دسته‌ای است؛ مقایسهٔ هم‌زمان توزیع کمیِ گروه‌ها هنوز در آزمایشگاه وجود ندارد.',1,null,'measurement','bars');
   }
   if(scale==='nominal'){
     if(goal==='position')return result('nominal-position','جایگاه عددی برای دستهٔ بدون ترتیب تعریف نمی‌شود','نام روش مطالعه یا شهر، بالا و پایینِ ذاتی ندارد. فراوانی و درصد هر دسته پرسش مناسب‌تری است.','کد ۳ برای یک شهر، به معنی بیشتر یا بهتر بودن آن نسبت به کد ۱ نیست.',1,null,'measurement');

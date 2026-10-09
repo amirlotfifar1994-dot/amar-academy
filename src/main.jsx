@@ -3,4 +3,5 @@ import {createRoot} from 'react-dom/client';
 import App from './App.jsx';
 import './styles.css';
 import './editorial.css';
+import './groupComparison.css';
 createRoot(document.getElementById('root')).render(<App/>);

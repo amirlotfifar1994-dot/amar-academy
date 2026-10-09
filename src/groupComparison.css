@@ -1,0 +1,41 @@
+.group-lab{display:grid;gap:24px}
+.group-opening{padding:clamp(22px,4vw,42px);background:linear-gradient(120deg,#edf5ef,#f8f5ec);border:1px solid #d4e3d8;border-radius:24px}
+.group-opening h2{font-size:clamp(24px,3vw,34px);line-height:1.6;max-width:780px;margin:12px 0}
+.group-opening p{max-width:850px;line-height:2}
+.group-workspace{display:grid;grid-template-columns:minmax(220px,290px) minmax(0,1fr);gap:22px;align-items:start}
+.group-card{background:var(--surface,#fff);border:1px solid var(--border,#deddd4);border-radius:20px;padding:clamp(18px,2.5vw,30px);min-width:0}
+.group-card h2{font-size:21px;margin:0 0 12px;line-height:1.7}
+.group-card p{line-height:1.95}
+.group-editor{display:grid;gap:18px}
+.group-editor label{display:grid;gap:8px;font-size:14px;font-weight:600}
+.group-editor select,.group-editor input{width:100%;min-width:0;border:1px solid #bbbfb7;border-radius:10px;background:#fff;color:#25382c;font:inherit;padding:12px}
+.group-editor input{font-size:20px;text-align:center;font-variant-numeric:tabular-nums}
+.group-editor input[aria-invalid=true]{border-color:#b64232;background:#fff5f1}
+.group-editor fieldset{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;border:1px solid #d4ddd4;border-radius:14px;padding:16px 12px}
+.group-editor legend{padding:0 8px;font-weight:700}
+.group-editor p{margin:0}
+.group-output{display:grid;gap:22px;min-width:0}
+.group-table{width:100%;min-width:410px;text-align:center;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.group-table caption{text-align:right;padding:0 0 16px;font-size:14px;color:#536556}
+.group-table th,.group-table td{padding:10px 7px;border-bottom:1px solid #e2e7dd}
+.group-table th{font-size:14px}
+.group-table tfoot{font-weight:700;background:#f4f6ef}
+.group-cell{display:grid;gap:3px;justify-items:center;width:100%;min-height:70px;padding:10px;border:2px solid transparent;border-radius:12px;background:#f4f6f0;color:#243e2d;cursor:pointer;font:inherit}
+.group-cell strong{font-size:21px}.group-cell small{font-size:14px;color:#475d4b}
+.group-cell:hover,.group-cell.selected{border-color:#426a4a;background:#e7f0e5}
+.group-denominator{display:grid;gap:8px;background:#edf3e8;border-radius:14px;padding:18px;margin-top:18px}
+.group-denominator span{font-size:14px}.group-denominator strong{font-size:20px;line-height:1.8}.group-denominator p{margin:0}
+.group-bars{display:grid;gap:24px;margin:28px 0;font-variant-numeric:tabular-nums}
+.group-bar-row{display:grid;grid-template-columns:78px minmax(0,1fr) 105px;gap:12px;align-items:center}
+.group-bar-row>span{font-weight:700}.group-bar-row small{display:block;font-weight:400;font-size:12px;color:#526253;direction:ltr;text-align:right}
+.group-bar-row>strong{text-align:left;font-size:16px}
+.group-bar-track{height:32px;background:#f0f1e8;border-radius:6px;overflow:hidden}
+.group-bar{height:100%;border-radius:6px;transition:width .25s ease}.group-bar-0{background:#426c50}.group-bar-1{background:#bc8d38}
+.group-answer-options{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+.group-answer-options button[aria-pressed=true]{outline:2px solid #416a49;outline-offset:2px;background:#e7efe2}
+.group-home-entry{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 30px;margin:26px 0;background:#edf3e8;border:1px solid #d7e1d2;border-radius:20px}
+.group-home-entry h2{font-size:22px;margin:0 0 8px}.group-home-entry p{margin:0}.group-home-entry .button{flex-shrink:0}
+.group-lab :focus-visible{outline:3px solid #ad6d19;outline-offset:3px}
+@media(max-width:900px){.group-workspace{grid-template-columns:1fr}.group-editor{grid-template-columns:1fr 1fr}.group-editor h2,.group-editor>p{grid-column:1/-1}}
+@media(max-width:560px){.group-editor{grid-template-columns:1fr}.group-card{padding:18px}.group-home-entry{align-items:start;flex-direction:column;padding:22px}.group-bar-row{grid-template-columns:60px minmax(0,1fr) 84px;gap:8px}.group-bar-row>strong{font-size:14px}.group-answer-options{flex-direction:column}.group-answer-options button{white-space:normal;text-align:right}}
+@media(prefers-reduced-motion:reduce){.group-bar{transition:none}}
