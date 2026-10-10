@@ -11,4 +11,5 @@ import './distributionComparison.css';
 import './robustness.css';
 import './ordinal.css';
 import './rankCorrelation.css';
+import './histogramBins.css';
 createRoot(document.getElementById('root')).render(<App/>);
