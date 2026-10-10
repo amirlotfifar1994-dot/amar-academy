@@ -10,4 +10,5 @@ import './project.css';
 import './distributionComparison.css';
 import './robustness.css';
 import './ordinal.css';
+import './rankCorrelation.css';
 createRoot(document.getElementById('root')).render(<App/>);
