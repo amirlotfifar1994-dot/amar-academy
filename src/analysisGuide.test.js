@@ -27,7 +27,7 @@ test('unknown shape stays exploratory and symmetry alone never implies normality
     const unknown=recommendAnalysis({scale:'quantitative',goal,shape:'unknown'});
     assert.equal(unknown.mode,'hist');assert.equal(unknown.id,'inspect-'+goal);
     const robust=recommendAnalysis({scale:'quantitative',goal,shape:'skewed'});
-    assert.equal(robust.mode,'box');assert.match(robust.caution,/خودکار حذف نمی‌شود/);
+    assert.equal(robust.mode,'robust');assert.match(robust.caution,/خودکار حذف نمی‌شود/);
     const balanced=recommendAnalysis({scale:'quantitative',goal,shape:'balanced'});
     assert.match(balanced.caution,/تقارن به‌تنهایی کافی نیست/);
   }
@@ -36,7 +36,7 @@ test('all combinations have a valid lesson, supported destination and a primary 
   for(const scale of scales)for(const goal of goals)for(const shape of shapes)for(const second of scales){
     const result=recommendAnalysis({scale:scale.id,goal:goal.id,shape:shape.id,secondScale:second.id});
     assert.ok(Number.isInteger(result.lessonId)&&result.lessonId>=1&&result.lessonId<=10);
-    assert.ok([null,'hist','box','z','scatter','groups','distributions'].includes(result.mode));
+    assert.ok([null,'hist','box','z','scatter','groups','distributions','robust'].includes(result.mode));
     assert.ok(['openstax.org','www.itl.nist.gov','stat.ethz.ch'].includes(new URL(result.source[1]).hostname));
     assert.ok(result.title.length>10&&result.why.length>20&&result.caution.length>20);
   }
