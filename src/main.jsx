@@ -5,4 +5,5 @@ import './styles.css';
 import './editorial.css';
 import './groupComparison.css';
 import './weightedMean.css';
+import './coachedPractice.css';
 createRoot(document.getElementById('root')).render(<App/>);
