@@ -12,4 +12,5 @@ import './robustness.css';
 import './ordinal.css';
 import './rankCorrelation.css';
 import './histogramBins.css';
+import './cumulative.css';
 createRoot(document.getElementById('root')).render(<App/>);
