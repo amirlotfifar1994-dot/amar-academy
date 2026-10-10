@@ -7,4 +7,5 @@ import './groupComparison.css';
 import './weightedMean.css';
 import './coachedPractice.css';
 import './project.css';
+import './distributionComparison.css';
 createRoot(document.getElementById('root')).render(<App/>);

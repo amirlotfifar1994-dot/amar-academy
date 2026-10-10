@@ -10,6 +10,7 @@ const examples=[
   ['رضایت از یک سؤال',{scale:'ordinal',goal:'center'}],
   ['زمان انتظار نامتقارن',{scale:'quantitative',goal:'center',shape:'skewed'}],
   ['خواب و استرس',{scale:'quantitative',goal:'relationship',secondScale:'quantitative'}],
+  ['گروه و نمرهٔ آزمون',{scale:'nominal',goal:'relationship',secondScale:'quantitative'}],
   ['گروه و پاسخ مثبت/منفی',{scale:'nominal',goal:'relationship',secondScale:'nominal'}],
 ];
 export function GuideExample({result}){
@@ -17,7 +18,11 @@ export function GuideExample({result}){
   const values=balanced?[2,3,3,4,4,5,5,6]:[2,3,3,4,4,5,6,18],stats=describe(values);
   const sx=v=>40+(v-stats.min)/(stats.max-stats.min)*360;
   let drawing,description;
-  if(result.mode==='groups'){
+  if(result.mode==='distributions'){
+    const groups=[[6,7,7,8],[2,5,9,12]],position=v=>45+(v-2)/10*350;
+    drawing=<>{groups.map((values,index)=>{const s=describe(values),y=60+index*66;return <g key={index}><text x="36" y={y+5} textAnchor="end">{index===0?'الف':'ب'}</text><line x1={position(s.min)} x2={position(s.max)} y1={y} y2={y}/><rect className="guide-box" x={position(s.q1)} y={y-17} width={position(s.q3)-position(s.q1)} height="34"/><line x1={position(s.median)} x2={position(s.median)} y1={y-17} y2={y+17}/></g>;})}{[2,7,12].map(value=><text key={value} x={position(value)} y="177" textAnchor="middle">{number(value)}</text>)}</>;
+    description='نمونهٔ نمره‌های دو گروه: الف [۶،۷،۷،۸]؛ ب [۲،۵،۹،۱۲]. هر دو میانگین ۷ دارند؛ پراکندگی متفاوت است. محور نمره‌ها مشترک است؛ کد الف و ب وارد میانگین نمی‌شود.';
+  }else if(result.mode==='groups'){
     const summary=summarizeGroups(groupPresets.unequal.cells),labels=['الف','ب'];
     drawing=<><text x="28" y="25">درصد</text>{[0,50,100].map(n=><text key={n} x="36" y={150-n} textAnchor="end">{number(n)}</text>)}{summary.rates.map((rate,i)=><g key={i}><rect x={110+i*160} y={145-rate} width="70" height={rate} rx="3"/><text x={145+i*160} y={135-rate} textAnchor="middle">{fmt(rate)}٪</text><text x={145+i*160} y="174" textAnchor="middle">گروه {labels[i]}</text></g>)}</>;
     description='سهم پاسخ مثبت درون هر گروه: الف ۸ از ۱۰ نفر، برابر ۸۰٪؛ ب ۱۲ از ۳۰ نفر، برابر ۴۰٪. میله‌ها مقیاس مشترک صفر تا ۱۰۰٪ دارند؛ تعداد بیشتر گروه ب به معنی درصد بیشتر نیست.';
