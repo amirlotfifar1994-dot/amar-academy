@@ -5,7 +5,7 @@ import {scales,goals,shapes,recommendAnalysis,normalizeAnalysisChoice,initialAna
 test('category codes never become numeric measurements; mixed variables use separate quantitative groups',()=>{
   for(const scale of ['nominal','ordinal'])for(const goal of goals){
     const result=recommendAnalysis({scale,goal:goal.id,secondScale:'quantitative'});
-    assert.equal(result.mode,goal.id==='relationship'?'distributions':null,`${scale}/${goal.id}`);assert.equal(result.visual,goal.id==='relationship'?'group-box':'bars');
+    assert.equal(result.mode,goal.id==='relationship'?'distributions':scale==='ordinal'?'ordinal':null,`${scale}/${goal.id}`);assert.equal(result.visual,goal.id==='relationship'?'group-box':'bars');
   }
   assert.equal(recommendAnalysis({scale:'nominal',goal:'position'}).id,'nominal-position');
   assert.equal(recommendAnalysis({scale:'ordinal',goal:'center'}).id,'ordinal-center');
@@ -36,7 +36,7 @@ test('all combinations have a valid lesson, supported destination and a primary 
   for(const scale of scales)for(const goal of goals)for(const shape of shapes)for(const second of scales){
     const result=recommendAnalysis({scale:scale.id,goal:goal.id,shape:shape.id,secondScale:second.id});
     assert.ok(Number.isInteger(result.lessonId)&&result.lessonId>=1&&result.lessonId<=10);
-    assert.ok([null,'hist','box','z','scatter','groups','distributions','robust'].includes(result.mode));
+    assert.ok([null,'hist','box','z','scatter','groups','distributions','robust','ordinal'].includes(result.mode));
     assert.ok(['openstax.org','www.itl.nist.gov','stat.ethz.ch'].includes(new URL(result.source[1]).hostname));
     assert.ok(result.title.length>10&&result.why.length>20&&result.caution.length>20);
   }

@@ -9,4 +9,5 @@ import './coachedPractice.css';
 import './project.css';
 import './distributionComparison.css';
 import './robustness.css';
+import './ordinal.css';
 createRoot(document.getElementById('root')).render(<App/>);
