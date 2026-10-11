@@ -15,4 +15,5 @@ import './histogramBins.css';
 import './cumulative.css';
 import './boxAnatomy.css';
 import './varianceLesson.css';
+import './nominal.css';
 createRoot(document.getElementById('root')).render(<App/>);
