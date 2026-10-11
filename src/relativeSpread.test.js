@@ -81,3 +81,8 @@ test('all presets are independent and all fixed choices have feedback',()=>{
  for(const [id,p] of Object.entries(relativePresets)){const s=initialRelative(id),a=analyzeRelative(s);assert.ok(a.groups);assert.deepEqual(a.groups[0].values,p.a);assert.ok(a.scenario);s.answers.test=1;assert.deepEqual(initialRelative(id).answers,{});}
  for(const q of relativeChecks){assert.equal(q.options.length,3);assert.equal(q.feedback.length,3);assert.ok(q.options[q.correct]);for(let value=0;value<3;value++){const s=relativeReducer(relativeReducer(initialRelative(),{type:'answer',id:q.id,value}),{type:'check',id:q.id});assert.equal(s.checked[q.id],true);assert.ok(q.feedback[value]);}}
 });
+
+test('close large measurements retain their actual small sample spread',()=>{
+ const step=2**-23,g=relativeSummary([1e9,1e9-step]);near(g.sd,step/Math.SQRT2);near(g.cv,(step/Math.SQRT2)/g.mean);
+ const tiny=relativeSummary([1e9,1e9-step,1e9-2*step]);near(tiny.sd,step);assert.ok(tiny.cv>0);
+});

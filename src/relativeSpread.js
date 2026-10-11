@@ -20,9 +20,10 @@ export const relativeChecks=[
 // Normalize before dividing, so tiny measurements retain their relative spread.
 export function relativeSummary(values,scale='ratio'){
  if(!Array.isArray(values)||!values.length||values.length>200||!Array.from(values).every(x=>Number.isFinite(x)&&Math.abs(x)<=1e9)||!Object.hasOwn(relativeScales,scale))return null;
- const n=values.length,magnitude=Math.max(...values.map(Math.abs)),normalized=values.map(x=>magnitude?x/magnitude:0);
- const origin=normalized[0],meanNormalized=origin+normalized.reduce((sum,x)=>sum+(x-origin),0)/n;
- const deviations=normalized.map(x=>x-meanNormalized),sdNormalized=n>1?Math.sqrt(deviations.reduce((sum,d)=>sum+d*d,0)/(n-1)):null;
+ const n=values.length,magnitude=Math.max(...values.map(Math.abs)),origin=values[0];
+ const offsets=values.map(x=>magnitude?(x-origin)/magnitude:0),meanOffset=offsets.reduce((sum,x)=>sum+x,0)/n;
+ const meanNormalized=(magnitude?origin/magnitude:0)+meanOffset;
+ const deviations=offsets.map(x=>x-meanOffset),sdNormalized=n>1?Math.sqrt(deviations.reduce((sum,d)=>sum+d*d,0)/(n-1)):null;
  const mean=meanNormalized*magnitude,sd=sdNormalized===null?null:sdNormalized*magnitude;
  const raw=sdNormalized!==null&&meanNormalized!==0?sdNormalized/meanNormalized:null;
  const quotient=raw!==null&&Number.isFinite(raw)?raw:null;
