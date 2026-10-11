@@ -13,4 +13,5 @@ import './ordinal.css';
 import './rankCorrelation.css';
 import './histogramBins.css';
 import './cumulative.css';
+import './boxAnatomy.css';
 createRoot(document.getElementById('root')).render(<App/>);

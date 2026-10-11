@@ -1,4 +1,5 @@
 import {fmt,number} from './format.js';
+import {boxAnatomyReport} from './boxAnatomy.js';
 export function buildLabReport({mode,stats,pair,pairError,z,rank,x,y,targetValue}) {
   if(!stats) return null;
   const headings={hist:'توزیع و فراوانی',box:'پراکندگی و چارک‌ها',z:'نمرهٔ استاندارد',scatter:'رابطهٔ دو متغیر'};
@@ -8,6 +9,7 @@ export function buildLabReport({mode,stats,pair,pairError,z,rank,x,y,targetValue
   lines.push('','دادهٔ X برای بازبینی (بدون گردکردن):',(x||stats.sorted).join(', '));
   if(mode==='scatter'&&y)lines.push('دادهٔ Y با حفظ ترتیب جفت‌ها:',y.join(', '));
   if(mode==='z'&&targetValue!==undefined)lines.push(`نمرهٔ خام مورد بررسی: ${targetValue===null?'نامعتبر':String(targetValue)}`);
+  if(mode==='box')lines.push('',boxAnatomyReport(x||stats.sorted));
   lines.push('','قراردادها: واریانس و انحراف معیار نمونه‌ای با مخرج n−1؛ چارک‌ها با درون‌یابی خطی نوع ۷. نمایش به دو رقم اعشار؛ محاسبه با دقت کامل.','محدوده: گزارش فقط دادهٔ واردشده را توصیف می‌کند. کیفیت اندازه‌گیری، نرمال‌بودن، تعمیم به جامعه و علیت تأیید نشده‌اند.');
   return lines.join('\n');
 }
