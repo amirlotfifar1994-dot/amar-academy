@@ -16,4 +16,5 @@ import './cumulative.css';
 import './boxAnatomy.css';
 import './varianceLesson.css';
 import './nominal.css';
+import './simpson.css';
 createRoot(document.getElementById('root')).render(<App/>);

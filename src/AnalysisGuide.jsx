@@ -54,7 +54,7 @@ export function AnalysisRecommendation({result,navigate}){
     <span className="analysis-result-label">پیشنهاد بر اساس انتخاب تو</span><h3 id="analysis-result-title">{result.title}</h3><p>{result.why}</p>
     <GuideExample result={result}/>
     <p className="analysis-caution"><strong>هنگام تفسیر</strong>{result.caution}</p>
-    <div className="analysis-actions"><button className="button secondary compact" onClick={()=>navigate('lesson',result.lessonId,{section:'guide-idea'})}><BookOpen size={17}/>درس مرتبط · جلسهٔ {number(result.lessonId)}</button>{result.mode?<button className="button compact" onClick={()=>navigate('lab',0,{mode:result.mode})}><FlaskConical size={17}/>تجربه در آزمایشگاه<ArrowLeft size={16}/></button>:null}</div>
+    <div className="analysis-actions"><button className="button secondary compact" onClick={()=>navigate('lesson',result.lessonId,{section:'guide-idea'})}><BookOpen size={17}/>درس مرتبط · جلسهٔ {number(result.lessonId)}</button>{result.mode?<button className="button compact" onClick={()=>navigate('lab',0,{mode:result.mode})}><FlaskConical size={17}/>تجربه در آزمایشگاه<ArrowLeft size={16}/></button>:null}{result.mode==='groups'?<button className="text-button" onClick={()=>navigate('lab',0,{mode:'simpson'})}>اگر ترکیب زیرگروه‌ها متفاوت باشد؛ سیمپسون<ArrowLeft size={16}/></button>:null}</div>
     {result.mode?<p className="small-note">آزمایشگاه با نمونهٔ پیش‌فرض باز می‌شود؛ دادهٔ خودت را آنجا وارد کن.</p>:<p className="small-note">برای این انتخاب، محاسبهٔ مستقیم مناسبی در آزمایشگاه فعلی وجود ندارد؛ درس مرتبط را ببین.</p>}
     <a className="analysis-source" href={result.source[1]} target="_blank" rel="noreferrer">مطالعهٔ بیشتر: {result.source[0]}</a>
   </section>;
