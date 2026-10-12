@@ -1,9 +1,11 @@
-import React,{useState} from 'react';
+import React,{useState,useId,useReducer} from 'react';
 import {ArrowLeft,Compass,BookOpen,FlaskConical} from 'lucide-react';
 import {scales,goals,shapes,initialAnalysisChoice,normalizeAnalysisChoice,recommendAnalysis} from './analysisGuide.js';
 import {describe,histogram,pairStats} from './stats.js';
 import {fmt,number} from './format.js';
 import {summarizeGroups,groupPresets} from './groupComparison.js';
+import {rankPresets,summarizeRankPairs} from './rankCorrelation.js';
+import {chartReadingFor,chartChoiceChecks,chartChoiceReducer} from './chartReading.js';
 
 const examples=[
   ['روش مطالعه',{scale:'nominal',goal:'distribution'}],
@@ -11,6 +13,7 @@ const examples=[
   ['زمان انتظار نامتقارن',{scale:'quantitative',goal:'center',shape:'skewed'}],
   ['خواب و استرس',{scale:'quantitative',goal:'relationship',secondScale:'quantitative'}],
   ['گروه و نمرهٔ آزمون',{scale:'nominal',goal:'relationship',secondScale:'quantitative'}],
+  ['دو پاسخِ ترتیبی',{scale:'ordinal',goal:'relationship',secondScale:'ordinal'}],
   ['گروه و پاسخ مثبت/منفی',{scale:'nominal',goal:'relationship',secondScale:'nominal'}],
 ];
 export function GuideExample({result}){
@@ -26,6 +29,10 @@ export function GuideExample({result}){
     const summary=summarizeGroups(groupPresets.unequal.cells),labels=['الف','ب'];
     drawing=<><text x="28" y="25">درصد</text>{[0,50,100].map(n=><text key={n} x="36" y={150-n} textAnchor="end">{number(n)}</text>)}{summary.rates.map((rate,i)=><g key={i}><rect x={110+i*160} y={145-rate} width="70" height={rate} rx="3"/><text x={145+i*160} y={135-rate} textAnchor="middle">{fmt(rate)}٪</text><text x={145+i*160} y="174" textAnchor="middle">گروه {labels[i]}</text></g>)}</>;
     description='سهم پاسخ مثبت درون هر گروه: الف ۸ از ۱۰ نفر، برابر ۸۰٪؛ ب ۱۲ از ۳۰ نفر، برابر ۴۰٪. میله‌ها مقیاس مشترک صفر تا ۱۰۰٪ دارند؛ تعداد بیشتر گروه ب به معنی درصد بیشتر نیست.';
+  }else if(result.mode==='ranks'){
+    const p=rankPresets.ties,r=summarizeRankPairs(p.x,p.y,'ordinal'),px=v=>50+(v-1)*110,py=v=>145-(v-1)*35;
+    drawing=<><text x="18" y="20">رتبه Y</text><text x="375" y="188">رتبه X</text>{[1,2,3,4].map(v=><g key={v}><text x={px(v)} y="169" textAnchor="middle">{number(v)}</text><text x="30" y={py(v)+5} textAnchor="end">{number(v)}</text></g>)}{r.rx.ranks.map((x,i)=><circle key={i} cx={px(x)} cy={py(r.ry.ranks[i])} r="7"/>)}</>;
+    description=`چهار جفت ترتیبی ساختگی؛ کدهای X: ${p.x.map(number).join('، ')}؛ کدهای Y: ${p.y.map(number).join('، ')}. محورهای تصویر رتبه‌اند؛ دو کد ۲ در X رتبهٔ متوسط ۲٫۵ دارند. اسپیرمن ${fmt(r.spearman)}؛ فاصلهٔ خام کدها فرض اندازه‌گیری نیست و جفت‌ها حفظ شده‌اند.`;
   }else if(kind==='bars'){
     const labels=result.choice.scale==='ordinal'?['کم','متوسط','زیاد']:['فردی','گروهی','آنلاین'],counts=[2,5,3];
     drawing=<>{counts.map((n,i)=><g key={i}><rect x={65+i*120} y={145-n*20} width="55" height={n*20} rx="3"/><text x={92+i*120} y={135-n*20} textAnchor="middle">{number(n)}</text><text x={92+i*120} y="174" textAnchor="middle">{labels[i]}</text></g>)}<text x="24" y="30">تعداد</text></>;
@@ -46,13 +53,14 @@ export function GuideExample({result}){
     drawing=<><text x="25" y="25">تعداد</text>{bins.map((b,i)=><g key={i}><rect x={45+i*58} y={145-b.count/max*100} width="56" height={b.count/max*100}/>{b.count>0?<text x={73+i*58} y={136-b.count/max*100} textAnchor="middle">{number(b.count)}</text>:null}</g>)}<text x="45" y="174" textAnchor="middle">{fmt(stats.min)}</text><text x="393" y="174" textAnchor="middle">{fmt(stats.max)}</text><text x="220" y="174" textAnchor="middle">مقدار · بازه‌های هم‌عرض</text></>;
     description=`داده‌های نمونه: ${values.map(number).join('، ')}. میانگین ${fmt(stats.mean)}؛ میانه ${fmt(stats.median)}. ${number(values.length)} مشاهده در ۶ بازهٔ هم‌عرض؛ مرز بالایی فقط در آخرین بازه شامل می‌شود.`;
   }
-  return <figure className="guide-example"><svg viewBox="0 0 440 195" role="img" aria-label={description}>{['bars','histogram','scatter'].includes(kind)?<line className="guide-baseline" x1="40" x2="410" y1="145" y2="145"/>:null}{drawing}</svg><figcaption><strong>مثال تصویری ساختگی</strong><p>{description}</p></figcaption></figure>;
+  return <figure className="guide-example"><svg viewBox="0 0 440 195" role="img" aria-label={description}>{['bars','histogram','scatter','rank-scatter'].includes(kind)?<line className="guide-baseline" x1="40" x2="410" y1="145" y2="145"/>:null}{drawing}</svg><figcaption><strong>مثال تصویری ساختگی</strong><p>{description}</p></figcaption></figure>;
 }
 
 export function AnalysisRecommendation({result,navigate}){
   return <section className="analysis-recommendation" aria-labelledby="analysis-result-title">
     <span className="analysis-result-label">پیشنهاد بر اساس انتخاب تو</span><h3 id="analysis-result-title">{result.title}</h3><p>{result.why}</p>
     <GuideExample result={result}/>
+    <ChartReading result={result} navigate={navigate}/>
     <p className="analysis-caution"><strong>هنگام تفسیر</strong>{result.caution}</p>
     <div className="analysis-actions"><button className="button secondary compact" onClick={()=>navigate('lesson',result.lessonId,{section:'guide-idea'})}><BookOpen size={17}/>درس مرتبط · جلسهٔ {number(result.lessonId)}</button>{result.mode?<button className="button compact" onClick={()=>navigate('lab',0,{mode:result.mode})}><FlaskConical size={17}/>تجربه در آزمایشگاه<ArrowLeft size={16}/></button>:null}{result.mode==='groups'?<button className="text-button" onClick={()=>navigate('lab',0,{mode:'simpson'})}>اگر ترکیب زیرگروه‌ها متفاوت باشد؛ سیمپسون<ArrowLeft size={16}/></button>:null}</div>
     {result.mode?<p className="small-note">آزمایشگاه با نمونهٔ پیش‌فرض باز می‌شود؛ دادهٔ خودت را آنجا وارد کن.</p>:<p className="small-note">برای این انتخاب، محاسبهٔ مستقیم مناسبی در آزمایشگاه فعلی وجود ندارد؛ درس مرتبط را ببین.</p>}
@@ -60,8 +68,13 @@ export function AnalysisRecommendation({result,navigate}){
   </section>;
 }
 
+
+export function ChartReading({result,navigate=()=>{}}){const reading=chartReadingFor(result);return <section className="chart-reading"><h4>{reading.title}</h4><dl>{[['محور افقی',reading.horizontal],['محور عمودی',reading.vertical],['معنای هر علامت',reading.mark]].map(([label,text])=><div key={label}><dt>{label}</dt><dd>{text}</dd></div>)}</dl><p><strong>مرز برداشت: </strong>{reading.limit}</p><button className="text-button" onClick={()=>navigate('lab',0,{mode:reading.next})}>این قرارداد را در آزمایشگاه ببین<ArrowLeft size={16}/></button></section>;}
+export function ChartChoiceChecks({state,dispatch,uid}){return <section className="chart-reading-checks dist-checks"><h3>سؤال را به نمودار وصل کن</h3><p className="small-note">سه سؤال ثابت؛ انتخاب‌های راهنمای بالا جواب آن‌ها را تغییر نمی‌دهد. پاسخ‌ها فقط در همین بخش می‌مانند و پیشرفت یا پشتیبان دوره را تغییر نمی‌دهند.</p>{chartChoiceChecks.map(q=><form key={q.id} onSubmit={e=>{e.preventDefault();dispatch({type:'check',id:q.id});}}><fieldset><legend>{q.question}</legend>{q.options.map((text,i)=><label key={i}><input type="radio" name={uid+q.id} checked={state.answers[q.id]===i} onChange={()=>dispatch({type:'answer',id:q.id,value:i})}/><span>{text}</span></label>)}</fieldset><button className="button secondary compact" disabled={!Number.isInteger(state.answers[q.id])||state.checked[q.id]}>بررسی انتخاب نمودار</button>{state.checked[q.id]?<p className={'dist-check-feedback '+(state.answers[q.id]===q.correct?'correct':'retry')} role="status">{q.feedback[state.answers[q.id]]}</p>:null}</form>)}<button className="text-button" onClick={()=>dispatch({type:'reset'})}>بازنشانی خودسنجی نمودار</button></section>;}
+
 export default function AnalysisGuide({navigate}){
   const [choice,setChoice]=useState(initialAnalysisChoice),result=recommendAnalysis(choice);
+  const [checks,dispatch]=useReducer(chartChoiceReducer,{answers:{},checked:{}}),uid=useId();
   function update(key,value){setChoice(current=>normalizeAnalysisChoice({...current,[key]:value,...(key==='scale'?{shape:'unknown'}:{})}));}
   return <section className="analysis-guide" aria-labelledby="analysis-guide-title">
     <div className="analysis-heading"><Compass size={27}/><div><h2 id="analysis-guide-title">کدام شاخص، کدام نمودار؟</h2><p>از سؤال و نوع داده شروع کن؛ دلیل انتخاب روش را بفهم.</p></div></div>
@@ -72,5 +85,6 @@ export default function AnalysisGuide({navigate}){
       <div className="analysis-examples"><strong>با یک مثال شروع کن</strong>{examples.map(([label,example])=><button key={label} onClick={()=>setChoice(normalizeAnalysisChoice(example))}>{label}<ArrowLeft size={15}/></button>)}</div>
       <p className="small-note">راهنمای آمار توصیفی است و دادهٔ واقعی را خودکار تشخیص نمی‌دهد. برای آزمون فرض یا تصمیم پژوهشی، طراحی مطالعه و شرایط روش هم لازم است.</p>
     </div><div><p className="sr-only" role="status">{result.title}</p><AnalysisRecommendation result={result} navigate={navigate}/></div></div>
+    <ChartChoiceChecks state={checks} dispatch={dispatch} uid={uid}/>
   </section>;
 }
