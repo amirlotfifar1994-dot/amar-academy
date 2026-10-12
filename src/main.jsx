@@ -18,4 +18,5 @@ import './varianceLesson.css';
 import './nominal.css';
 import './simpson.css';
 import './relativeSpread.css';
+import './samplingMean.css';
 createRoot(document.getElementById('root')).render(<App/>);
