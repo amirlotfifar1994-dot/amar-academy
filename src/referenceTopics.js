@@ -19,7 +19,14 @@ export const referenceTopics=[
   ['robust','مرکز و پراکندگی','مقدار دور و شاخص‌های مقاوم','اثر یک مقدار دور را بر میانگین و میانه ببین؛ حذف، اصلاح و توصیف را با دلیل و حفظ دادهٔ اصلی از هم جدا کن.',4,'robust','MAD برش پرت حساسیت'],
   ['scatter','رابطه و گزارش','نمودار پراکنش و همبستگی پیرسون','جفت‌های واقعی را نگه دار؛ جهت و شدت رابطهٔ خطی را از علیت و رابطه‌های غیرخطی جدا کن.',9,'scatter','کوواریانس r خواب استرس'],
   ['ranks','رابطه و گزارش','رتبه‌ها و همبستگی اسپیرمن','رابطهٔ رتبه‌های جفت‌شده را بررسی کن؛ تساوی رتبه‌ها و تفاوت دادهٔ ترتیبی با فاصلهٔ عددی را ببین.',9,'ranks','Spearman Pearson رتبه تساوی'],
-  ['report','رابطه و گزارش','کیفیت داده و گزارش قابل بازبینی','سؤال، تعریف متغیر، پاسخ گمشده، تصمیم‌های اصلاح و تعداد معتبر را به نتیجه و محدودیت آن وصل کن.',10,'scatter','پاکسازی گزارش نامعتبر تعمیم'],
+  ['report','رابطه و گزارش','کیفیت داده و گزارش قابل بازبینی','سؤال، تعریف متغیر، پاسخ گمشده، تصمیم‌های اصلاح و تعداد معتبر را به نتیجه و محدودیت آن وصل کن.',10,'scatter','پاکسازی گزارش نامعتبر تعمیم داده گمشده داده مفقود'],
 ].map(([id,category,title,description,lessonId,mode,keywords])=>({id,category,title,description,lessonId,mode,keywords}));
 export function normalizeReferenceText(value){return String(value).normalize('NFKC').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200e\u200f]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();}
 export function findReferenceTopics(query='',category=referenceCategories[0]){const words=normalizeReferenceText(query).split(' ').filter(Boolean);return referenceTopics.filter(topic=>(category===referenceCategories[0]||topic.category===category)&&words.every(word=>normalizeReferenceText([topic.title,topic.description,topic.keywords].join(' ')).includes(word)));}
+export function referenceActivity(topic){
+  if(topic.id==='measurement')return {label:'تجربهٔ مقیاس اندازه‌گیری',view:'lesson',id:1,options:{section:'guide-experiment'}};
+  if(topic.id==='center')return {label:'تجربهٔ میانگین و میانه',view:'lesson',id:4,options:{section:'guide-experiment'}};
+  if(topic.id==='shape')return {label:'مثال حل‌شدهٔ شکل توزیع',view:'lesson',id:7,options:{section:'guide-example'}};
+  if(topic.id==='report')return {label:'از دادهٔ خام تا گزارش',view:'project',id:0};
+  return {label:'آموزش تعاملی',view:'lab',id:0,options:{mode:topic.mode}};
+}
