@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {referenceArticles} from './referenceArticles.js';
+import {referenceArticles,referenceArticleForTopic} from './referenceArticles.js';
 import {analyzeSimpson,initialSimpson,commonComposition} from './simpson.js';
 test('independent articles map to the correct topics and have distinct shareable slugs',()=>{
  assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
  assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,3);
+ assert.equal(referenceArticleForTopic('scatter'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('ranks'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('unknown'),null);
 });
 test('Simpson article counts, pooled percentages and all common compositions match its worked claims',()=>{
  const state=initialSimpson(),before=JSON.stringify(state),summary=analyzeSimpson(state).summary;
