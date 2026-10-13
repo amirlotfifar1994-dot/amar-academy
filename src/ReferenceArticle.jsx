@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import SimpsonArticle from './SimpsonArticle.jsx';
 import {ArrowLeft} from 'lucide-react';
 import {fmt,number} from './format.js';
 import {sdSeWorkedExample,sdSeExactExample,illustrativeMeanSE} from './sdSeArticle.js';
@@ -6,6 +7,7 @@ const sections=[['question','دو سؤال، دو پراکندگی'],['meaning',
 function ArticleSection({id,title,children}){return <section id={'article-'+id} className="reference-article-section"><h2>{title}</h2>{children}</section>;}
 export default function ReferenceArticle({slug,navigate}){
   const [n,setN]=useState(25);
+  if(slug==='simpson')return <SimpsonArticle navigate={navigate}/>;
   if(slug!=='sd-se')return <div className="empty-state"><h1>این مقاله در مرجع فعلی وجود ندارد</h1><button className="button" onClick={()=>navigate('home')}>بازگشت به موضوع‌ها</button></div>;
   const worked=sdSeWorkedExample(),model=sdSeExactExample(),se=illustrativeMeanSE(n);
   return <article className="reference-article"><header className="reference-article-header"><button className="text-button" onClick={()=>navigate('home')}>مرجع موضوعی / بازگشت به موضوع‌ها</button><span>مقالهٔ مستقل · مفهوم، محاسبه و تفسیر</span><h1>انحراف معیار و خطای معیار</h1><p>پراکندگی افراد با نوسان میانگین یک چیز نیست. این تفاوت را با یک مثال خواب، یک جامعهٔ کوچک و تغییر اندازهٔ نمونه دنبال کن.</p><button className="button secondary" onClick={()=>navigate('lab',0,{mode:'sampling'})}>همهٔ نمونه‌های ممکن را در ابزار ببین<ArrowLeft size={17}/></button></header><div className="reference-article-layout"><nav className="reference-article-toc" aria-label="فهرست مقاله">{sections.map(([id,title])=><a key={id} href={'#article-'+id}>{title}</a>)}</nav><div>
