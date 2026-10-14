@@ -4,8 +4,8 @@ import {referenceArticles,referenceArticleForTopic} from './referenceArticles.js
 import {analyzeSimpson,initialSimpson,commonComposition} from './simpson.js';
 test('independent articles map to the correct topics and have distinct shareable slugs',()=>{
  assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
- assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,3);
- assert.equal(referenceArticleForTopic('scatter'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('ranks'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('unknown'),null);
+ assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,4);
+ assert.equal(referenceArticleForTopic('scatter'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('ranks'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('unknown'),null);assert.equal(referenceArticleForTopic('constructor'),null);assert.equal(referenceArticleForTopic('__proto__'),null);assert.equal(referenceArticles.robust.slug,'outliers-robust');
 });
 test('Simpson article counts, pooled percentages and all common compositions match its worked claims',()=>{
  const state=initialSimpson(),before=JSON.stringify(state),summary=analyzeSimpson(state).summary;
@@ -28,4 +28,20 @@ test('ordinal worked example retains original pair identities and its stated ave
  const p=rankPresets.ties,s=summarizeRankPairs(p.x,p.y,p.scale);
  assert.deepEqual(s.rx.ranks,[1,2.5,2.5,4]);assert.deepEqual(s.ry.ranks,[1,3,2,4]);assert.equal(s.cross,4.5);assert.equal(s.ssX,4.5);assert.equal(s.ssY,5);
  assert.ok(Math.abs(s.spearman-4.5/Math.sqrt(4.5*5))<1e-12);assert.equal(s.pearson,null);assert.deepEqual(s.x,p.x);assert.deepEqual(s.y,p.y);
+});
+
+import {robustSummary,robustPresets} from './robustness.js';
+test('robust article scenario changes only the final row and matches the worked mean and spread',()=>{
+ const base=robustPresets.balanced.values,before=[...base],a=robustSummary(base,10),b=robustSummary([...base.slice(0,-1),30],10);
+ assert.equal(a.mean,6.5);assert.ok(Math.abs(a.sd-Math.sqrt(2.5))<1e-12);assert.equal(b.mean,8.6);assert.ok(Math.abs(b.sd-Math.sqrt(524.4/9))<1e-12);
+ assert.equal(b.median,6.5);assert.equal(b.mad,1.5);assert.equal(b.iqr,2.5);assert.equal(b.trimmedMean,6.5);assert.equal(b.retained.length,8);assert.deepEqual(base,before);
+ for(let last=0;last<=60;last++){const result=robustSummary([...base.slice(0,-1),last],10);assert.equal(result.n,10);assert.ok(Math.abs(result.mean-(56+last)/10)<1e-12);assert.equal(result.retained.length,8);}
+});
+test('raw MAD zero counterexample still has a real extreme value and nonzero sample SD',()=>{
+ const s=robustSummary([5,5,5,5,100]);assert.equal(s.median,5);assert.equal(s.mean,24);assert.equal(s.mad,0);assert.equal(s.iqr,0);assert.ok(Math.abs(s.sd-Math.sqrt(1805))<1e-12);
+});
+test('trim choices conserve every raw observation while selecting the stated middle subset',()=>{
+ const values=[4,5,5,6,6,7,7,8,8,30];
+ for(const trim of [0,10,20]){const s=robustSummary(values,trim);assert.equal(s.k,trim/10);assert.equal(s.retained.length,10-2*s.k);assert.equal(s.excludedLow.length+s.excludedHigh.length+s.retained.length,10);}
+ for(const trim of [10,20]){const s=robustSummary([4,6,8],trim);assert.equal(s.k,0);assert.equal(s.trimmedMean,6);}
 });

@@ -1,2 +1,2 @@
-export const referenceArticles={sampling:{slug:'sd-se',title:'انحراف معیار و خطای معیار'},simpson:{slug:'simpson',title:'پارادوکس سیمپسون و ترکیب زیرگروه‌ها'},ranks:{slug:'pearson-spearman',title:'پیرسون، اسپیرمن و معنای رابطه'}};
-export function referenceArticleForTopic(id){return referenceArticles[id==='scatter'?'ranks':id]??null;}
+export const referenceArticles={sampling:{slug:'sd-se',title:'انحراف معیار و خطای معیار'},simpson:{slug:'simpson',title:'پارادوکس سیمپسون و ترکیب زیرگروه‌ها'},ranks:{slug:'pearson-spearman',title:'پیرسون، اسپیرمن و معنای رابطه'},robust:{slug:'outliers-robust',title:'داده‌های دورافتاده و شاخص‌های مقاوم'}};
+export function referenceArticleForTopic(id){const key=id==='scatter'?'ranks':id;return Object.hasOwn(referenceArticles,key)?referenceArticles[key]:null;}
