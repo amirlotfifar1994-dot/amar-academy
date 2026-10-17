@@ -2,9 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {referenceArticles,referenceArticleForTopic} from './referenceArticles.js';
 import {analyzeSimpson,initialSimpson,commonComposition} from './simpson.js';
+import {summarizeWeightedMean} from './weightedMean.js';
+
+test('weighted article reconstructs the individual mean for every 40-person composition, including empty groups',()=>{
+ for(let b=0;b<=40;b++){
+  const a=40-b,raw=[...Array(a).fill(10),...Array(b).fill(18)];
+  const result=summarizeWeightedMean([{value:a?'10':'',weight:String(a)},{value:b?'18':'',weight:String(b)}],'pooled');
+  assert.equal(result.totalWeight,40);assert.equal(result.mean,raw.reduce((s,x)=>s+x,0)/raw.length);
+  assert.equal(result.equalMean,a&&b?14:b?18:10);
+ }
+ const grades=summarizeWeightedMean([{value:'12',weight:'1'},{value:'18',weight:'3'},{value:'16',weight:'2'}]);
+ assert.equal(grades.weightedSum,98);assert.equal(grades.totalWeight,6);assert.equal(grades.mean,98/6);assert.equal(grades.equalMean,46/3);
+});
 test('independent articles map to the correct topics and have distinct shareable slugs',()=>{
- assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
- assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,4);
+ assert.equal(referenceArticles.weighted.slug,'weighted-mean');assert.equal(referenceArticleForTopic('weighted'),referenceArticles.weighted);assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
+ assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,5);
  assert.equal(referenceArticleForTopic('scatter'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('ranks'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('unknown'),null);assert.equal(referenceArticleForTopic('constructor'),null);assert.equal(referenceArticleForTopic('__proto__'),null);assert.equal(referenceArticles.robust.slug,'outliers-robust');
 });
 test('Simpson article counts, pooled percentages and all common compositions match its worked claims',()=>{
