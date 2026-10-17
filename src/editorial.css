@@ -67,3 +67,9 @@ main{padding:26px 30px 40px;max-width:1500px}.page-heading h1{font-size:2.35rem;
 @media(max-width:1050px){.reference-opening,.reference-article-header{grid-template-columns:minmax(0,1fr) minmax(190px,30%);column-gap:20px}}
 @media(max-width:760px){.reference-opening,.reference-article-header{grid-template-columns:minmax(0,1fr)}.reference-art{grid-column:1;grid-row:auto;margin-top:24px;width:100%;max-width:460px;justify-self:center}.reference-art img{border-radius:12px}.reference-grid .reference-topic-image{max-height:210px}}
 @media(prefers-reduced-motion:reduce){.reference-grid article{transition:none}}
+.reference-topic-art{margin:0 0 18px;min-width:0}
+.reference-grid .reference-topic-art .reference-topic-image{margin-bottom:10px}
+.reference-topic-art details{border:1px solid #dce6de;border-radius:8px;background:#f7faf6;padding:9px 12px}
+.reference-topic-art summary{font-size:.78rem;line-height:1.9;color:#365e4b;cursor:pointer}
+.reference-topic-art summary:focus-visible{outline:3px solid var(--amber);outline-offset:4px;border-radius:3px}
+.reference-topic-art details p{font-size:.83rem;line-height:2.1;color:#445f50;margin:12px 0 2px;overflow-wrap:anywhere}
