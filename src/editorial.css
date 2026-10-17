@@ -53,3 +53,17 @@ main{padding:26px 30px 40px;max-width:1500px}.page-heading h1{font-size:2.35rem;
 .reference-article-layout>div{min-width:0}@media(max-width:850px){.reference-article-layout{grid-template-columns:minmax(0,1fr)}}
 .article-pair-picture{margin:22px 0;padding:16px;border:1px solid #d8e4dc;border-radius:12px;background:#fcfdfb;min-width:0}.article-pair-picture svg{display:block;width:100%;max-width:620px;height:auto;margin:auto;overflow:hidden}.article-pair-picture text{font-size:12px;fill:#3b5c49}.article-pair-picture figcaption{font-size:.83rem;line-height:2;color:#536e5c;margin-top:12px}.article-correlation-result{padding:18px;margin-top:16px;background:#edf6f0;border-radius:10px}.article-correlation-result p{margin:4px 0}
 .article-scenario select{display:block;width:100%;max-width:100%;font:inherit;padding:10px;margin:12px 0;border:1px solid #cbded1;border-radius:8px;background:#fff;color:inherit}
+/* Conceptual artwork complements the live statistical figures. */
+.reference-opening,.reference-article-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,34%);column-gap:28px;align-items:start}
+.reference-opening>*,.reference-article-header>*{grid-column:1}
+.reference-art{margin:0;min-width:0;grid-column:2;grid-row:1/span 6;align-self:center}
+.reference-art img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;border-radius:18px;box-shadow:0 14px 30px #314b3620}
+.reference-art figcaption{font-size:.78rem;line-height:1.9;color:#526849;text-align:center;margin-top:12px}
+.reference-opening .button,.reference-article-header .button{justify-self:start}
+.reference-opening .text-button{justify-self:start;margin-inline:0}
+.reference-grid .reference-topic-image{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;max-height:190px;border-radius:10px;background:#f3ebdf;margin-bottom:18px}
+.reference-grid article{transition:border-color .18s ease,box-shadow .18s ease}
+.reference-grid article:hover{border-color:#8ca68f;box-shadow:0 8px 22px #264c3610}
+@media(max-width:1050px){.reference-opening,.reference-article-header{grid-template-columns:minmax(0,1fr) minmax(190px,30%);column-gap:20px}}
+@media(max-width:760px){.reference-opening,.reference-article-header{grid-template-columns:minmax(0,1fr)}.reference-art{grid-column:1;grid-row:auto;margin-top:24px;width:100%;max-width:460px;justify-self:center}.reference-art img{border-radius:12px}.reference-grid .reference-topic-image{max-height:210px}}
+@media(prefers-reduced-motion:reduce){.reference-grid article{transition:none}}
