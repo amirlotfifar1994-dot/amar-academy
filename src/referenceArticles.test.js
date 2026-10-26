@@ -3,6 +3,22 @@ import assert from 'node:assert/strict';
 import {referenceArticles,referenceArticleForTopic} from './referenceArticles.js';
 import {analyzeSimpson,initialSimpson,commonComposition} from './simpson.js';
 import {summarizeWeightedMean} from './weightedMean.js';
+import {centerExamples} from './centerExamples.js';
+import {describe} from './stats.js';
+
+test('center article examples match their stated centers, modes and observed values without mutation',()=>{
+ const expected={balanced:[4,4,[]],distant:[8,4,[]],even:[5,5,[]],repeated:[5,5,[1,9]],zero:[4,5,[0,5]],constant:[4,4,[4]]};
+ for(const [id,[mean,median,modes]] of Object.entries(expected)){
+  const values=centerExamples[id].values,before=[...values],s=describe(values);
+  assert.equal(s.mean,mean);assert.equal(s.median,median);assert.deepEqual(s.modes,modes);assert.deepEqual(values,before);
+  assert(values.every(v=>v>=0&&v<=30));assert.equal(s.n,values.length);
+ }
+});
+test('center article counterexamples separate middle position, midrange and reconstructed total',()=>{
+ const values=centerExamples.distant.values,s=describe(values);
+ assert.equal(values.reduce((a,b)=>a+b,0),40);assert.equal(s.n*s.mean,40);assert.equal(s.n*s.median,20);assert.equal((s.min+s.max)/2,14);
+ for(const id of ['even','repeated']){const p=centerExamples[id].values,r=describe(p);assert.equal(r.mean,r.median);assert(!p.includes(r.mean));}
+});
 
 test('weighted article reconstructs the individual mean for every 40-person composition, including empty groups',()=>{
  for(let b=0;b<=40;b++){
@@ -15,8 +31,8 @@ test('weighted article reconstructs the individual mean for every 40-person comp
  assert.equal(grades.weightedSum,98);assert.equal(grades.totalWeight,6);assert.equal(grades.mean,98/6);assert.equal(grades.equalMean,46/3);
 });
 test('independent articles map to the correct topics and have distinct shareable slugs',()=>{
- assert.equal(referenceArticles.weighted.slug,'weighted-mean');assert.equal(referenceArticleForTopic('weighted'),referenceArticles.weighted);assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
- assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,5);
+ assert.equal(referenceArticles.center.slug,'mean-median-mode');assert.equal(referenceArticleForTopic('center'),referenceArticles.center);assert.equal(referenceArticles.weighted.slug,'weighted-mean');assert.equal(referenceArticleForTopic('weighted'),referenceArticles.weighted);assert.equal(referenceArticles.sampling.slug,'sd-se');assert.equal(referenceArticles.simpson.slug,'simpson');
+ assert.equal(referenceArticles.ranks.slug,'pearson-spearman');assert.equal(new Set(Object.values(referenceArticles).map(a=>a.slug)).size,6);
  assert.equal(referenceArticleForTopic('scatter'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('ranks'),referenceArticles.ranks);assert.equal(referenceArticleForTopic('unknown'),null);assert.equal(referenceArticleForTopic('constructor'),null);assert.equal(referenceArticleForTopic('__proto__'),null);assert.equal(referenceArticles.robust.slug,'outliers-robust');
 });
 test('Simpson article counts, pooled percentages and all common compositions match its worked claims',()=>{

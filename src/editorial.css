@@ -73,3 +73,6 @@ main{padding:26px 30px 40px;max-width:1500px}.page-heading h1{font-size:2.35rem;
 .reference-topic-art summary{font-size:.78rem;line-height:1.9;color:#365e4b;cursor:pointer}
 .reference-topic-art summary:focus-visible{outline:3px solid var(--amber);outline-offset:4px;border-radius:3px}
 .reference-topic-art details p{font-size:.83rem;line-height:2.1;color:#445f50;margin:12px 0 2px;overflow-wrap:anywhere}
+.center-ordered-values{display:flex;flex-wrap:wrap;gap:10px 24px;padding:14px 28px;background:#f5f8f2;border-radius:10px;list-style-position:inside}
+.center-ordered-values li{padding:5px 9px;margin:0!important;color:#53695b;font-variant-numeric:tabular-nums}
+.center-ordered-values strong{display:inline-block;padding:2px 10px;border:2px solid #9d6a13;border-radius:7px;color:#3c552f;background:#fff7dc}
